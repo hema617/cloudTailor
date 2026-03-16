@@ -1,0 +1,62 @@
+Tailor System (5 tables)
+Category System (2 tables)
+Design System (6 tables)
+Custom Order System (3 tables)
+Measurement System (1 table)
+Cart System (2 tables)
+Order System (5 tables)
+Payment System (2 tables)
+Review System (1 table)
+Chat System (2 tables)
+Notification System (1 table)
+Admin System (3 tables)
+
+
+
+
+users
+user_profiles
+user_addresses
+
+tailors
+tailor_locations
+tailor_portfolios
+tailor_services
+
+categories
+subcategories
+
+designs
+design_images
+design_options
+design_option_values
+
+custom_orders
+custom_order_images
+
+measurements
+
+carts
+cart_items
+
+orders
+order_items
+order_measurements
+order_status_history
+
+payments
+refunds
+
+reviews
+
+chats
+chat_messages
+
+notifications
+
+admin_logs
+reports
+
+settings
+cities
+delivery_charges

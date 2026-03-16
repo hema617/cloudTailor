@@ -1,0 +1,174 @@
+1️⃣ Auth APIs (User Authentication)
+
+Total: 8 APIs
+
+POST   /api/register
+POST   /api/login
+POST   /api/logout
+POST   /api/forgot-password
+POST   /api/reset-password
+GET    /api/profile
+PUT    /api/profile/update
+POST   /api/change-password
+2️⃣ User Address APIs
+
+Total: 5 APIs
+
+GET    /api/user/addresses
+POST   /api/user/address/add
+PUT    /api/user/address/update/{id}
+DELETE /api/user/address/delete/{id}
+GET    /api/user/address/{id}
+3️⃣ Tailor APIs
+
+Total: 10 APIs
+
+GET    /api/tailors
+GET    /api/tailor/{id}
+POST   /api/tailor/register
+PUT    /api/tailor/update/{id}
+GET    /api/tailor/services/{tailor_id}
+POST   /api/tailor/service/add
+PUT    /api/tailor/service/update/{id}
+DELETE /api/tailor/service/delete/{id}
+GET    /api/tailor/portfolio/{tailor_id}
+POST   /api/tailor/portfolio/upload
+4️⃣ Tailor Availability APIs
+
+Total: 4 APIs
+
+GET    /api/tailor/availability/{tailor_id}
+POST   /api/tailor/availability/add
+PUT    /api/tailor/availability/update/{id}
+DELETE /api/tailor/availability/delete/{id}
+5️⃣ Category APIs
+
+Total: 4 APIs
+
+GET    /api/categories
+GET    /api/categories/{id}
+GET    /api/subcategories/{category_id}
+GET    /api/subcategory/{id}
+6️⃣ Design APIs
+
+Total: 8 APIs
+
+GET    /api/designs
+GET    /api/design/{id}
+GET    /api/designs/category/{category_id}
+GET    /api/designs/subcategory/{subcategory_id}
+GET    /api/designs/tailor/{tailor_id}
+POST   /api/design/add
+PUT    /api/design/update/{id}
+DELETE /api/design/delete/{id}
+7️⃣ Design Options APIs
+
+Total: 4 APIs
+
+GET    /api/design/options/{design_id}
+POST   /api/design/option/add
+PUT    /api/design/option/update/{id}
+DELETE /api/design/option/delete/{id}
+8️⃣ Wishlist APIs
+
+Total: 3 APIs
+
+GET    /api/wishlist
+POST   /api/wishlist/add
+DELETE /api/wishlist/remove/{design_id}
+9️⃣ Cart APIs
+
+Total: 5 APIs
+
+GET    /api/cart
+POST   /api/cart/add
+PUT    /api/cart/update/{id}
+DELETE /api/cart/remove/{id}
+DELETE /api/cart/clear
+🔟 Order APIs
+
+Total: 10 APIs
+
+POST   /api/order/place
+GET    /api/orders
+GET    /api/order/{id}
+GET    /api/orders/user/{user_id}
+GET    /api/orders/tailor/{tailor_id}
+PUT    /api/order/status/update/{id}
+POST   /api/order/measurement/add
+POST   /api/order/attachment/upload
+GET    /api/order/status-history/{order_id}
+POST   /api/order/cancel/{id}
+1️⃣1️⃣ Custom Order APIs
+
+Total: 4 APIs
+
+POST   /api/custom-order/create
+GET    /api/custom-orders
+GET    /api/custom-order/{id}
+POST   /api/custom-order/image/upload
+1️⃣2️⃣ Payment APIs
+
+Total: 4 APIs
+
+POST   /api/payment/initiate
+POST   /api/payment/success
+POST   /api/payment/failure
+GET    /api/payment/{order_id}
+1️⃣3️⃣ Refund APIs
+
+Total: 2 APIs
+
+POST   /api/refund/request
+GET    /api/refund/{order_id}
+1️⃣4️⃣ Review APIs
+
+Total: 3 APIs
+
+POST   /api/review/add
+GET    /api/reviews/tailor/{tailor_id}
+DELETE /api/review/delete/{id}
+1️⃣5️⃣ Chat APIs
+
+Total: 4 APIs
+
+GET    /api/chat/list
+GET    /api/chat/{chat_id}
+POST   /api/chat/message/send
+GET    /api/chat/messages/{chat_id}
+1️⃣6️⃣ Coupon APIs
+
+Total: 3 APIs
+
+POST   /api/coupon/apply
+GET    /api/coupon/{code}
+GET    /api/coupons
+1️⃣7️⃣ Notification APIs
+
+Total: 3 APIs
+
+GET    /api/notifications
+POST   /api/notification/read/{id}
+DELETE /api/notification/delete/{id}
+1️⃣8️⃣ Location APIs
+
+Total: 3 APIs
+
+GET    /api/cities
+GET    /api/city/{id}
+GET    /api/delivery-charge/{city_id}
+1️⃣9️⃣ Commission APIs (Admin)
+
+Total: 2 APIs
+
+GET    /api/admin/commissions
+GET    /api/admin/commission/{order_id}
+2️⃣0️⃣ Admin APIs
+
+Total: 5 APIs
+
+GET    /api/admin/users
+GET    /api/admin/tailors
+GET    /api/admin/orders
+GET    /api/admin/reports
+GET    /api/admin/dashboard
