@@ -1,0 +1,433 @@
+CREATE TABLE users (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+email VARCHAR(255) UNIQUE NOT NULL,
+phone VARCHAR(20) UNIQUE NOT NULL,
+password VARCHAR(255) NOT NULL,
+role ENUM('customer','tailor','admin') DEFAULT 'customer',
+status BOOLEAN DEFAULT 1,
+email_verified_at TIMESTAMP NULL,
+remember_token VARCHAR(100),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+);
+
+CREATE TABLE user_profiles (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED,
+gender ENUM('male','female','other'),
+date_of_birth DATE,
+profile_image VARCHAR(255),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+Schema::create('user_addresses', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->string('name');
+    $table->string('phone',20);
+    $table->string('address_line1');
+    $table->string('address_line2')->nullable();
+    $table->string('city');
+    $table->string('state');
+    $table->string('pincode',10);
+    $table->boolean('is_default')->default(false);
+    $table->timestamps();
+});
+
+CREATE TABLE tailors (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED,
+shop_name VARCHAR(255),
+experience_years INT DEFAULT 0,
+description TEXT,
+rating DECIMAL(3,2) DEFAULT 0,
+is_verified BOOLEAN DEFAULT FALSE,
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE categories (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+image VARCHAR(255),
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+);
+
+CREATE TABLE subcategories (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+category_id BIGINT UNSIGNED,
+name VARCHAR(255),
+image VARCHAR(255),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE designs (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+tailor_id BIGINT UNSIGNED,
+category_id BIGINT UNSIGNED,
+subcategory_id BIGINT UNSIGNED,
+name VARCHAR(255),
+description TEXT,
+price DECIMAL(10,2),
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (tailor_id) REFERENCES tailors(id) ON DELETE CASCADE,
+FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
+FOREIGN KEY (subcategory_id) REFERENCES subcategories(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE design_images (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+design_id BIGINT UNSIGNED,
+image VARCHAR(255),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (design_id) REFERENCES designs(id) ON DELETE CASCADE
+);
+
+CREATE TABLE design_options (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+design_id BIGINT UNSIGNED,
+option_name VARCHAR(255),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (design_id) REFERENCES designs(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE design_option_values (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+option_id BIGINT UNSIGNED,
+value VARCHAR(255),
+price_adjustment DECIMAL(10,2) DEFAULT 0,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (option_id) REFERENCES design_options(id) ON DELETE CASCADE
+);
+
+CREATE TABLE orders (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_number VARCHAR(100) UNIQUE,
+user_id BIGINT UNSIGNED,
+tailor_id BIGINT UNSIGNED,
+total_amount DECIMAL(10,2),
+delivery_type VARCHAR(50),
+delivery_charge DECIMAL(10,2) DEFAULT 0,
+address_id BIGINT UNSIGNED,
+status VARCHAR(50) DEFAULT 'pending',
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (tailor_id) REFERENCES tailors(id) ON DELETE CASCADE,
+FOREIGN KEY (address_id) REFERENCES user_addresses(id) ON DELETE SET NULL
+);
+
+
+CREATE TABLE order_items (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+design_id BIGINT UNSIGNED,
+quantity INT,
+price DECIMAL(10,2),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+FOREIGN KEY (design_id) REFERENCES designs(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE order_measurements (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+measurement_id BIGINT UNSIGNED,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+FOREIGN KEY (measurement_id) REFERENCES measurements(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE order_status_history (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+status VARCHAR(50),
+updated_by BIGINT UNSIGNED,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE order_attachments (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+image VARCHAR(255),
+note TEXT,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE order_deliveries (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+delivery_type VARCHAR(50),
+courier_name VARCHAR(255),
+tracking_number VARCHAR(255),
+shipped_at TIMESTAMP NULL,
+delivered_at TIMESTAMP NULL,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE custom_orders (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED,
+tailor_id BIGINT UNSIGNED,
+category_id BIGINT UNSIGNED,
+description TEXT,
+reference_image VARCHAR(255),
+status VARCHAR(50) DEFAULT 'pending',
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (tailor_id) REFERENCES tailors(id) ON DELETE CASCADE,
+FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE custom_order_images (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+custom_order_id BIGINT UNSIGNED,
+image VARCHAR(255),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (custom_order_id) REFERENCES custom_orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE measurements (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED,
+name VARCHAR(255),
+chest DECIMAL(5,2),
+waist DECIMAL(5,2),
+hip DECIMAL(5,2),
+shoulder DECIMAL(5,2),
+sleeve_length DECIMAL(5,2),
+dress_length DECIMAL(5,2),
+notes TEXT,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE carts (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE cart_items (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+cart_id BIGINT UNSIGNED,
+design_id BIGINT UNSIGNED,
+quantity INT DEFAULT 1,
+price DECIMAL(10,2),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
+FOREIGN KEY (design_id) REFERENCES designs(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE payments (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+payment_method VARCHAR(100),
+transaction_id VARCHAR(255),
+amount DECIMAL(10,2),
+status VARCHAR(50) DEFAULT 'pending',
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE refunds (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+payment_id BIGINT UNSIGNED,
+amount DECIMAL(10,2),
+reason TEXT,
+status VARCHAR(50) DEFAULT 'pending',
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE CASCADE
+);
+
+CREATE TABLE reviews (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+user_id BIGINT UNSIGNED,
+tailor_id BIGINT UNSIGNED,
+rating INT,
+review TEXT,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (tailor_id) REFERENCES tailors(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE chats (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+customer_id BIGINT UNSIGNED,
+tailor_id BIGINT UNSIGNED,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+FOREIGN KEY (customer_id) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (tailor_id) REFERENCES tailors(id) ON DELETE CASCADE
+);
+
+CREATE TABLE chat_messages (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+chat_id BIGINT UNSIGNED,
+sender_id BIGINT UNSIGNED,
+message TEXT,
+image VARCHAR(255),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE,
+FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE wishlists (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED,
+design_id BIGINT UNSIGNED,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (design_id) REFERENCES designs(id) ON DELETE CASCADE
+);
+
+CREATE TABLE coupons (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+code VARCHAR(100) UNIQUE,
+discount_type ENUM('percentage','fixed'),
+discount_value DECIMAL(10,2),
+max_usage INT NULL,
+used_count INT DEFAULT 0,
+expires_at TIMESTAMP NULL,
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+);
+
+CREATE TABLE coupon_usages (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+coupon_id BIGINT UNSIGNED,
+user_id BIGINT UNSIGNED,
+order_id BIGINT UNSIGNED,
+used_at TIMESTAMP,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE CASCADE,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE notifications (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED NULL,
+title VARCHAR(255),
+message TEXT,
+is_read BOOLEAN DEFAULT FALSE,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE admin_logs (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+admin_id BIGINT UNSIGNED,
+action VARCHAR(255),
+description TEXT NULL,
+ip_address VARCHAR(45),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+);
+
+
+CREATE TABLE reports (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED NULL,
+order_id BIGINT UNSIGNED NULL,
+reason TEXT,
+status VARCHAR(50) DEFAULT 'pending',
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+);
+
+
+CREATE TABLE settings (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+`key` VARCHAR(255) UNIQUE,
+value TEXT NULL,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+);
+
+
+CREATE TABLE cities (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255),
+state VARCHAR(255),
+country VARCHAR(255) DEFAULT 'India',
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+);
+
+
+CREATE TABLE delivery_charges (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+city_id BIGINT UNSIGNED,
+charge DECIMAL(10,2),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE commissions (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+order_id BIGINT UNSIGNED,
+tailor_id BIGINT UNSIGNED,
+order_amount DECIMAL(10,2),
+platform_commission DECIMAL(10,2),
+tailor_earning DECIMAL(10,2),
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+FOREIGN KEY (tailor_id) REFERENCES tailors(id) ON DELETE CASCADE
+);
