@@ -23,19 +23,26 @@ updated_at TIMESTAMP NULL,
 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-Schema::create('user_addresses', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-    $table->string('name');
-    $table->string('phone',20);
-    $table->string('address_line1');
-    $table->string('address_line2')->nullable();
-    $table->string('city');
-    $table->string('state');
-    $table->string('pincode',10);
-    $table->boolean('is_default')->default(false);
-    $table->timestamps();
-});
+CREATE TABLE user_addresses (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    address_line1 VARCHAR(255) NOT NULL,
+    address_line2 VARCHAR(255),
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    pincode VARCHAR(10) NOT NULL,
+    is_default BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+
+    CONSTRAINT fk_user_addresses_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
 
 CREATE TABLE tailors (
 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -51,6 +58,85 @@ updated_at TIMESTAMP NULL,
 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE tailor_locations (
+    id BIGSERIAL PRIMARY KEY,
+    tailor_id BIGINT NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    pincode VARCHAR(10) NOT NULL,
+    latitude DECIMAL(10,7),
+    longitude DECIMAL(10,7),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+
+    CONSTRAINT fk_tailor_locations_tailor
+    FOREIGN KEY (tailor_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE tailor_portfolios (
+    id BIGSERIAL PRIMARY KEY,
+    tailor_id BIGINT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+
+    CONSTRAINT fk_tailor_portfolios_tailor
+    FOREIGN KEY (tailor_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE tailor_services (
+    id BIGSERIAL PRIMARY KEY,
+    tailor_id BIGINT NOT NULL,
+    service_name VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    delivery_days INTEGER NOT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+
+    CONSTRAINT fk_tailor_services_tailor
+    FOREIGN KEY (tailor_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE tailor_availability (
+    id BIGSERIAL PRIMARY KEY,
+    tailor_id BIGINT NOT NULL,
+    day_of_week VARCHAR(10) CHECK (day_of_week IN (
+        'monday','tuesday','wednesday','thursday','friday','saturday','sunday'
+    )),
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    is_available BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+
+    CONSTRAINT fk_tailor_availability_tailor
+    FOREIGN KEY (tailor_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE tailor_holidays (
+    id BIGSERIAL PRIMARY KEY,
+    tailor_id BIGINT NOT NULL,
+    date DATE NOT NULL,
+    reason VARCHAR(255),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+
+    CONSTRAINT fk_tailor_holidays_tailor
+    FOREIGN KEY (tailor_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
 
 CREATE TABLE categories (
 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
