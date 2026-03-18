@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('image')->nullable();
-            $table->string('slug')->nullable();
-            $table->string('type')->nullable();
-            $table->string('gender')->nullable();
-            $table->boolean('status')->default(true);
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->string('payment_method');
+            $table->string('transaction_id')->nullable();
+            $table->decimal('amount', 10, 2);
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('payments');
     }
 };
