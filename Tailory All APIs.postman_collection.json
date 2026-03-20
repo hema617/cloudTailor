@@ -105,6 +105,47 @@
           "response": []
         },
         {
+          "name": "Tailor Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "2222222222",
+                  "type": "text",
+                  "uuid": "b07f17c5-70a8-4b4c-858f-6481439e7461"
+                },
+                {
+                  "key": "password",
+                  "value": "tailor@123",
+                  "type": "text",
+                  "uuid": "4a458173-5dd5-46ca-a5ed-de959f2eb570"
+                },
+                {
+                  "key": "role",
+                  "value": "tailor",
+                  "type": "text",
+                  "uuid": "ee1d1d97-2c6c-49d8-b104-bd7efd2d4e84"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Logout",
           "request": {
             "method": "POST",
@@ -348,10 +389,262 @@
       ]
     },
     {
-      "name": "TailorController",
+      "name": "Tailor Dashboard",
       "item": [
         {
-          "name": "List Tailors",
+          "name": "Design",
+          "item": [
+            {
+              "name": "Add Design",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "5|sJw5h4HNSLM1BwaiaA7gRvAIs0e3AwfepqfocBOK8fe575c8",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"category_id\": 1,\r\n    \"subcategory_id\": 2,\r\n    \"tailor_id\": 2,\r\n    \"name\": \"Stylish Kurti Design\",\r\n    \"description\": \"Latest trending kurti with embroidery\",\r\n    \"price\": 999\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/tailor/design/add",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tailor",
+                    "design",
+                    "add"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Design",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "5|sJw5h4HNSLM1BwaiaA7gRvAIs0e3AwfepqfocBOK8fe575c8",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n\r\n    \"category_id\": 1,\r\n    \"subcategory_id\": 2,\r\n    \"tailor_id\": 2,\r\n    \"name\": \"Stylishssssssssssssssssss Kurti Design\",\r\n    \"description\": \"Latest trending kurti with embroidery\",\r\n    \"price\": 999\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/tailor/design/update/9",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tailor",
+                    "design",
+                    "update",
+                    "9"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Designs",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tailorToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/tailor/designs",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tailor",
+                    "designs"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Order",
+          "item": [
+            {
+              "name": "Order List",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tailorToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/tailor/order/list",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tailor",
+                    "order",
+                    "list"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Tailor Availability",
+          "item": [
+            {
+              "name": "tailor availability",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tailorToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/tailor/tailor/availability",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tailor",
+                    "tailor",
+                    "availability"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "tailor availability Add",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tailorToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"day_of_week\": \"Monday\",\r\n    \"start_time\": \"10:00\",\r\n    \"end_time\": \"18:00\",\r\n    \"is_available\":1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/tailor/tailor/availability/add",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tailor",
+                    "tailor",
+                    "availability",
+                    "add"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "5|sJw5h4HNSLM1BwaiaA7gRvAIs0e3AwfepqfocBOK8fe575c8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tailor/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tailor",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Tailors Copy",
           "request": {
             "method": "GET",
             "header": [],
@@ -1510,6 +1803,152 @@
       "name": "AdminController",
       "item": [
         {
+          "name": "Design",
+          "item": [
+            {
+              "name": "Design List",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "4|8UfEhb0Xv6wwvmYnnZHXB6MCDi1Mr3631JTAgIW31437fc8a",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/designs",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "designs"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Order",
+          "item": [
+            {
+              "name": "order List",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "4|8UfEhb0Xv6wwvmYnnZHXB6MCDi1Mr3631JTAgIW31437fc8a",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/order/list",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "order",
+                    "list"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Category",
+          "item": [
+            {
+              "name": "Category List",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "4|8UfEhb0Xv6wwvmYnnZHXB6MCDi1Mr3631JTAgIW31437fc8a",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/categories",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "categories"
+                  ],
+                  "query": [
+                    {
+                      "key": "slug",
+                      "value": "customer",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Sub Category List",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "4|8UfEhb0Xv6wwvmYnnZHXB6MCDi1Mr3631JTAgIW31437fc8a",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users?slug=customer",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users"
+                  ],
+                  "query": [
+                    {
+                      "key": "slug",
+                      "value": "customer",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "Admin Dashboard",
           "request": {
             "method": "GET",
@@ -1694,6 +2133,30 @@
       ]
     }
   ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
   "variable": [
     {
       "key": "base_url",
@@ -1702,6 +2165,11 @@
     {
       "key": "token",
       "value": ""
+    },
+    {
+      "key": "tailorToken",
+      "value": "",
+      "type": "default"
     }
   ]
 }
