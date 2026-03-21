@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TailorAvailability extends Model
 {
+    protected $table="tailor_availability";
     protected $fillable = [
         'tailor_id',
         'day_of_week',

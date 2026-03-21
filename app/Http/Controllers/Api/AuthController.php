@@ -163,16 +163,40 @@ class AuthController extends Controller
     // Profile
     public function profile(Request $request)
     {
+        try {
+           $user = $request->user();
+           
+            //$user = Auth::user()->id;
+            if (!$user) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'User not authenticated'
+                ], 401);
+            }
+            $user=User::where('id',$user['id'])->with('addresses')->first();
+            // Load relations with selected fields
+           
 
-        $user = $request->user()->load('profile', 'addresses');
-
-        return response()->json([
-            'status' => true,
-            'data' => $user
-        ]);
+            return response()->json([
+                'status'  => true,
+                'message' => 'Profile fetched successfully',
+                'data'    => [
+                    'id'        => $user->id,
+                    'name'      => $user->name,
+                    'email'     => $user->email,
+                    'mobile'    => $user->mobile,
+                    'profile'   => $user->profile,
+                    'addresses' => $user->addresses
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Error while fetching profile',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
-
-
     // Update Profile
     public function updateProfile(Request $request)
     {

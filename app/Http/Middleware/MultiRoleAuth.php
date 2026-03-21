@@ -5,23 +5,23 @@ namespace App\Http\Middleware;
 use App\Services\ResponseService;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class MultiRoleAuth
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  Closure(Request): (Response)  $next
-     */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $user = auth('sanctum')->user();
+        // ✅ Get user from sanctum
+        $user = Auth::guard('sanctum')->user();
 
         if (!$user) {
-            return (new ResponseService())->error('Unauthenticated',422);
-            
+            return (new ResponseService())->error('Unauthenticated', 401);
         }
+
+        // ✅ IMPORTANT: Bind user to request (so $request->user() works)
+        $request->setUserResolver(function () use ($user) {
+            return $user;
+        });
 
         return $next($request);
     }

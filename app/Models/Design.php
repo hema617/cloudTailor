@@ -6,15 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Design extends Model
 {
-    protected $fillable = [
-        'category_id',
-        'subcategory_id',
-        'tailor_id',
-        'title',
-        'description',
-        'price',
-        'status'
-    ];
+    protected $guarded = [];
 
     public function category()
     {
